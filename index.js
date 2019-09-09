@@ -1,7 +1,11 @@
-const canvas = d3.select('.canvas')
+const data = [
+  {width: 200, height: 100, fill: 'red'}
+]
 
-const svg = canvas.append('svg').attr('height', 600).attr('width', 600)
+const svg = d3.select('svg')
 
-svg.append('rect').attr('width', 200).attr('height', 100).attr('fill', 'blue').attr('x', 20)
-svg.append('circle')
-svg.append('line')
+const rect = svg.select('rect')
+  .data(data)
+  .attr('width', function(d, i, n) { return d.width})
+  .attr('height', function(d) { return d.height })
+  .attr('fill', function(d) { return d.fill })
