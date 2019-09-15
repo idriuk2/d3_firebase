@@ -1,27 +1,25 @@
+// DOM elements
+const btns = document.querySelectorAll('button');
 const form = document.querySelector('form');
-const name = document.querySelector('#name');
-const cost = document.querySelector('#cost');
-const error = document.querySelector('#error');
+const formAct = document.querySelector('form span');
+const input = document.querySelector('input');
+const error = document.querySelector('.error');
 
-form.addEventListener('submit', (e) => {
+var activity = 'cycling';
 
-  e.preventDefault();
+btns.forEach(btn => {
+  btn.addEventListener('click', e => {
+    // get activity
+    activity = e.target.dataset.activity;
 
-  if (name.value && cost.value) {
+    // remove and add active class
+    btns.forEach(btn => btn.classList.remove('active'));
+    e.target.classList.add('active');
 
-    const item = { 
-      name: name.value, 
-      cost: parseInt(cost.value) 
-    };
+    // set id of input field
+    input.setAttribute('id', activity);
 
-    db.collection('expenses').add(item).then(res => {
-      error.textContent = '';
-      name.value = '';
-      cost.value = '';
-    });
-
-  } else {
-    error.textContent = 'Please enter values before submitting';
-  }
-
+    // set text of form span (the activity)
+    formAct.textContent = activity;
+  });
 });
