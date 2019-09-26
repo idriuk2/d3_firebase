@@ -47,7 +47,7 @@
 
 svg.append("defs").append("path")
     .attr("id", "arc")
-    .attr("d", circlePath(300, 300, 100, 0, 180, 'outside', 90));
+    .attr("d", circlePath(300, 300, 100, 0, 270, 'inside', 45));
 
 var thing = svg.append("g")
     .attr("id", "thing")
@@ -61,7 +61,7 @@ thing.append("text")
 
 thing.append("use")
     .attr("xlink:href", "#arc")
-    .style("stroke", "black")
+    /* .style("stroke", "black") */
     .style("fill", "none");
 
   function polarToCartesian(centerX, centerY, radius, angleInDegrees, rotateDeg) {
