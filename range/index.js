@@ -3,7 +3,9 @@ class Range extends React.Component {
     super(props)
 
     this.state = {
-      dragging: false
+      dragging: false, 
+      cx: 200,
+      cy: 200
     }
 
     this.svgRef = React.createRef()
@@ -17,11 +19,13 @@ class Range extends React.Component {
       let x = Math.round(e.pageX - rect.left)
       let y = Math.round(e.pageY - rect.top)
 
-      console.log(x, y)
+      this.setState({cx: x, cy: y})
     }
   }
 
   render() {
+    const { cx, cy } = this.state
+
     return (
       <div
         className='App'
@@ -35,8 +39,8 @@ class Range extends React.Component {
           onMouseMove={this.handleMouseMove}
         >
           <circle 
-            cx={200} 
-            cy={200} 
+            cx={cx} 
+            cy={cy} 
             r={10} 
             fill="white"
             onMouseDown={(e) => { this.setState({dragging: true}) }}
