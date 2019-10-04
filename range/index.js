@@ -4,12 +4,13 @@ class Range extends React.Component {
 
     this.state = {
       dragging: false, 
-      cx: 200,
-      cy: 200,
+      cx: 44,
+      cy: 194,
       r: 12
     }
 
     this.svgRef = React.createRef()
+    this.pathRef = React.createRef()
   }
 
   handleMouseMove = (e) => {
@@ -30,6 +31,8 @@ class Range extends React.Component {
 
   handleMouseDown = () => {
     this.setState({ dragging: true, r: 16 })
+    console.log('path length', this.pathRef.current.getTotalLength())
+    console.log('point coordinates ', this.pathRef.current.getPointAtLength(150))
   }
 
   render() {
@@ -47,11 +50,12 @@ class Range extends React.Component {
           ref={this.svgRef}
           onMouseMove={this.handleMouseMove}
         >
-          <path 
-            class="arc" 
+          <path
+            ref={this.pathRef} 
+            className="arc" 
             stroke="#fff" 
-            stroke-width="1" 
-            stroke-dasharray="5" 
+            strokeWidth="1" 
+            strokeDasharray="5" 
             fill="transparent" 
             d="M 50 200 A 300 300 0 0 0 350 200">
           </path>
