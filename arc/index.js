@@ -4,14 +4,15 @@ const svg = d3.select('.canvas')
   .attr('height', 400);
 
 const graph = svg.append('g')
-  .attr("transform", `translate(200, 200)`);
+  /* .attr("transform", `translate(200, 200)`); */
 
 const arc = graph.append('path')
   .attr('class', 'arc')
   .attr('stroke', '#fff')
-  .attr('stroke-width', 3)
+  .attr('stroke-width', 1)
+  .attr('stroke-dasharray', 5)
   .attr('fill', 'transparent')
-  .attr('d', circlePath(0, 0, 100, 30, 240))
+  .attr('d', circlePath(200, -210, 300, 150, 210))
 
   function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
     var angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
