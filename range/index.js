@@ -1,12 +1,22 @@
+const RADIUS = 12
+const RADIUS_DRAG = 16
+
+const START_X = 50
+const START_Y = 200
+
+const ARC_X = 200
+const ARC_Y = -60
+const ARC_RADIUS = 300
+
 class Range extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
       dragging: false, 
-      cx: 44,
-      cy: 194,
-      r: 12
+      cx: START_X,
+      cy: START_Y,
+      r: RADIUS
     }
 
     this.svgRef = React.createRef()
@@ -21,16 +31,22 @@ class Range extends React.Component {
       let x = Math.round(e.pageX - rect.left)
       let y = Math.round(e.pageY - rect.top)
 
-      this.setState({cx: x, cy: y, r: 16})
+      const rangeX = x < 50 ? 50 : 
+          x > 350 ? 350 : x 
+
+      const deltaX = ARC_X - rangeX
+      const rangeY = Math.sqrt(Math.pow(ARC_RADIUS, 2) - Math.pow(deltaX, 2)) + ARC_Y
+
+      this.setState({cx: rangeX, cy: rangeY})
     }
   }
 
   handleMouseUp = () => {
-    this.setState({ dragging: false, r: 12 })
+    this.setState({ dragging: false, r: RADIUS })
   }
 
   handleMouseDown = () => {
-    this.setState({ dragging: true, r: 16 })
+    this.setState({ dragging: true, r: RADIUS_DRAG })
     console.log('path length', this.pathRef.current.getTotalLength())
     console.log('point coordinates ', this.pathRef.current.getPointAtLength(150))
   }
