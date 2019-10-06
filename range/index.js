@@ -1,26 +1,39 @@
 const RADIUS = 12
 const RADIUS_DRAG = 16
 
-const START_X = 50
-const START_Y = 200
-
-const ARC_X = 200
-const ARC_Y = -60
+const ARC_CENTER_X = 170
+const ARC_CENTER_Y = -240
 const ARC_RADIUS = 300
+const ARC_START_ANGLE = 150
+const ARC_END_ANGLE = 210
+
+const start = polarToCartesian(ARC_CENTER_X, ARC_CENTER_Y, ARC_RADIUS, ARC_END_ANGLE)
+const end = polarToCartesian(ARC_CENTER_X, ARC_CENTER_Y, ARC_RADIUS, ARC_START_ANGLE)
+const arcPath = `M ${start.x} ${start.y} A ${ARC_RADIUS} ${ARC_RADIUS} 0 0 0 ${end.x} ${end.y}`
 
 class Range extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      canvasWidth: 0,
+      canvasHeight: 0,
       dragging: false, 
-      cx: START_X,
-      cy: START_Y,
+      cx: start.x,
+      cy: start.y,
       r: RADIUS
     }
 
     this.svgRef = React.createRef()
     this.pathRef = React.createRef()
+  }
+
+  componentDidMount() {
+    const arcLength = this.pathRef.current.getTotalLength()
+    const canvasHeight = this.pathRef.current.getPointAtLength(arcLength / 2).y + RADIUS_DRAG
+    const canvasWidth = end.x + start.x
+
+    this.setState({canvasWidth, canvasHeight})
   }
 
   handleMouseMove = (e) => {
@@ -31,13 +44,14 @@ class Range extends React.Component {
       let x = Math.round(e.pageX - rect.left)
       let y = Math.round(e.pageY - rect.top)
 
-      const rangeX = x < 50 ? 50 : 
-          x > 350 ? 350 : x 
+      const cx = x < start.x ? start.x : 
+                     x > end.x ? end.x : 
+                     x 
 
-      const deltaX = ARC_X - rangeX
-      const rangeY = Math.sqrt(Math.pow(ARC_RADIUS, 2) - Math.pow(deltaX, 2)) + ARC_Y
+      const dX = ARC_CENTER_X - cx
+      const cy = Math.sqrt(Math.pow(ARC_RADIUS, 2) - Math.pow(dX, 2)) + ARC_CENTER_Y
 
-      this.setState({cx: rangeX, cy: rangeY})
+      this.setState({cx , cy})
     }
   }
 
@@ -47,12 +61,10 @@ class Range extends React.Component {
 
   handleMouseDown = () => {
     this.setState({ dragging: true, r: RADIUS_DRAG })
-    console.log('path length', this.pathRef.current.getTotalLength())
-    console.log('point coordinates ', this.pathRef.current.getPointAtLength(150))
   }
 
   render() {
-    const { cx, cy, r } = this.state
+    const { canvasWidth, canvasHeight, cx, cy, r } = this.state
 
     return (
       <div
@@ -60,8 +72,8 @@ class Range extends React.Component {
         onMouseUp={this.handleMouseUp}
       >
         <svg
-          width={400}
-          height={400}
+          width={canvasWidth}
+          height={canvasHeight}
           style={{background: 'indigo'}}
           ref={this.svgRef}
           onMouseMove={this.handleMouseMove}
@@ -73,7 +85,7 @@ class Range extends React.Component {
             strokeWidth="1" 
             strokeDasharray="5" 
             fill="transparent" 
-            d="M 50 200 A 300 300 0 0 0 350 200">
+            d={arcPath}>
           </path>
           <circle 
             cx={cx} 
@@ -93,3 +105,11 @@ ReactDOM.render(
   <Range />,
   document.getElementById('root')
 );
+
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+  var angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+  return {
+    x: centerX + radius * Math.cos(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians),
+  };
+}
