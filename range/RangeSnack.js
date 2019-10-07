@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  StyleSheet, View, Text, PanResponder } from 'react-native';
+import { StyleSheet, View, Text, PanResponder } from 'react-native';
 import Svg, { Circle, Rect, Path } from 'react-native-svg';
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -23,7 +23,7 @@ const start = polarToCartesian(ARC_CENTER_X, ARC_CENTER_Y, ARC_RADIUS, ARC_END_A
 const end = polarToCartesian(ARC_CENTER_X, ARC_CENTER_Y, ARC_RADIUS, ARC_START_ANGLE)
 const arcPath = `M ${start.x} ${start.y} A ${ARC_RADIUS} ${ARC_RADIUS} 0 0 0 ${end.x} ${end.y}`
 
-export default class App extends Component {
+class Range extends Component {
   constructor(props) {
     super(props)
 
@@ -105,13 +105,6 @@ export default class App extends Component {
             width={340}
             height={76}
           >
-            <Rect
-              x="0"
-              y="0"
-              width={340}
-              height={76}
-              fill="indigo"
-            />
             <Path
               stroke="#fff" 
               strokeWidth="1" 
@@ -136,5 +129,14 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'indigo'
   }
 })
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Range />
+    </View>
+  );
+}
