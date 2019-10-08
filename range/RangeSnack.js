@@ -10,7 +10,7 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   };
 }
 
-function getSvgDimenstions(arcPath, radiusDrag, arcStart, arcEnd ) {
+function getSvgDimensions(arcPath, radiusDrag, arcStart, arcEnd ) {
   const path = require("svg-path-properties")
   const properties = path.svgPathProperties(arcPath)
   const arcLength = properties.getTotalLength()
@@ -33,7 +33,7 @@ const start = polarToCartesian(ARC_CENTER_X, ARC_CENTER_Y, ARC_RADIUS, ARC_END_A
 const end = polarToCartesian(ARC_CENTER_X, ARC_CENTER_Y, ARC_RADIUS, ARC_START_ANGLE)
 const arcPath = `M ${start.x} ${start.y} A ${ARC_RADIUS} ${ARC_RADIUS} 0 0 0 ${end.x} ${end.y}`
 
-const { canvasWidth, canvasHeight } = getSvgDimenstions(arcPath, RADIUS_DRAG, start, end)
+const { canvasWidth, canvasHeight } = getSvgDimensions(arcPath, RADIUS_DRAG, start, end)
 
 class Range extends Component {
   constructor(props) {
