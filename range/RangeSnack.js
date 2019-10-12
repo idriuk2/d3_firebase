@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, PanResponder } from 'react-native';
-import Svg, { Circle, Rect, Path } from 'react-native-svg';
+import { StyleSheet, View, PanResponder, Animated } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   var angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
@@ -20,8 +22,8 @@ function getSvgDimensions(arcPath, radiusDrag, arcStart, arcEnd ) {
   return { canvasWidth, canvasHeight }
 }
 
-const RADIUS = 12
-const RADIUS_DRAG = 16
+const RADIUS = 14
+const RADIUS_DRAG = 20
 
 const ARC_CENTER_X = 170
 const ARC_CENTER_Y = -240
