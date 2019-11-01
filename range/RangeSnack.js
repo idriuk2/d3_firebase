@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, PanResponder } from 'react-native';
-import Svg, { Circle, Rect, Path } from 'react-native-svg';
+import { StyleSheet, View, PanResponder, Animated } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
   var angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
   return {
     x: centerX + radius * Math.cos(angleInRadians),
-    y: centerY + radius * Math.sin(angleInRadians),
+    y: centerY + radius * Math.sin(angleInRadians)
   };
 }
 
@@ -20,8 +22,8 @@ function getSvgDimensions(arcPath, radiusDrag, arcStart, arcEnd ) {
   return { canvasWidth, canvasHeight }
 }
 
-const RADIUS = 12
-const RADIUS_DRAG = 16
+const RADIUS = 14
+const RADIUS_DRAG = 20
 
 const ARC_CENTER_X = 170
 const ARC_CENTER_Y = -240
@@ -46,7 +48,9 @@ class Range extends Component {
       r: RADIUS,
 
       memX: false,
-      memY: false
+      memY: false,
+
+      anim: new Animated.Value(0)
     }
 
     this.panResponder = {}
@@ -67,7 +71,7 @@ class Range extends Component {
   }
 
   handlePanResponderGrant = () => {
-    const { cx, cy } = this.state
+    const { cx, cy, anim } = this.state
 
     this.setState({ 
       dragging: true, 
@@ -75,6 +79,14 @@ class Range extends Component {
       memX: cx,
       memY: cy 
     })
+
+    Animated.spring(
+      anim,
+      {
+        toValue: 1,
+        friction: 3
+      }
+    ).start();
   }
 
   handlePanResponderMove = (e, gestureState) => {
@@ -97,14 +109,28 @@ class Range extends Component {
   }
 
   handlePanResponderEnd = (e, gestureState) => {
+    const { anim } = this.state
+
     this.setState({
       dragging: false, 
       r: RADIUS
     })
+
+    Animated.spring(
+      anim,
+      {
+        toValue: 0,
+        friction: 3
+      }
+    ).start();
   }
 
   render() {
-    const { cx, cy, r } = this.state
+    const { cx, cy, anim } = this.state
+    const r = anim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [RADIUS, RADIUS_DRAG]
+    })
 
     return (
       <View style={styles.container}>
@@ -124,7 +150,7 @@ class Range extends Component {
               fill="transparent" 
               d={arcPath}
             />
-            <Circle 
+            <AnimatedCircle 
               cx={cx} 
               cy={cy} 
               r={r} 
